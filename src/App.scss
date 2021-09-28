@@ -1,0 +1,65 @@
+body {
+    background-color: #ddf;
+    padding: 20px;
+}
+
+main {
+    display: flex;
+}
+
+#result {
+    background-color: #fff;
+    width: calc(var(--cols) * (var(--col-width) + 0px) + 110px);
+    height: calc(24 * 20px);
+    display: flex;
+    padding-right: 10px;
+    position: relative;
+    margin-left: 20px;
+
+    >.labels {
+        list-style-type: none;
+        padding: 0 1px 0 10px;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+
+        li {
+            color: #888;
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+        }
+    }
+
+    >.heat-map {
+        width: 30px;
+        height: 100%;
+        position: absolute;
+        left: 60px;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+    }
+
+    >.data {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 110px;
+        height: 100%;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        
+
+        >.column {
+            height: 100%;
+            width: calc(var(--col-width) - 1px);
+            margin-right: 1px;
+        }
+    }
+}
