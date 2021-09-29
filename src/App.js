@@ -67,7 +67,7 @@ function createHeatMap(timeRanges) {
     return heatMap;
 }
 
-function heatMapToGradient(heatMap, maxVal) {
+function heatMapToGradient(heatMap, maxVal) { 
     const segmentCount = 24 * (60 / 15);
 
     // There doesn't appear to be a way in CSS to add alpha to a given color, unfortunately
