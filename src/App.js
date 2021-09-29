@@ -68,8 +68,6 @@ function createHeatMap(timeRanges) {
 }
 
 function heatMapToGradient(heatMap, maxVal) {
-    const bg = 'rgba(255, 255, 255, 0)';
-    const fg = 'var(--sleep-color)';
     const segmentCount = 24 * (60 / 15);
 
     // There doesn't appear to be a way in CSS to add alpha to a given color, unfortunately
