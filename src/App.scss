@@ -17,23 +17,23 @@ main {
     margin-left: 20px;
 
     > .labels {
-      list-style-type: none;
-      padding: 0 1px 0 10px;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 100%;
+        list-style-type: none;
+        padding: 0 1px 0 10px;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
 
-      li {
-        color: #888;
-        flex: 1;
-        border-bottom: 1px solid #ddd;
+        li {
+            color: #888;
+            flex: 1;
+            border-bottom: 1px solid #ddd;
 
-        &:last-of-type {
-            border-bottom: none;
+            &:last-of-type {
+                border-bottom: none;
+            }
         }
-      }
     }
 
     > .heat-map {
