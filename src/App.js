@@ -114,19 +114,43 @@ function durationToDurationString(duration) {
     return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
 }
 
+// I'm going to go by a reasonable assumption that there's no day with more than 18 hours of sleep, to make the graph prettier with minimum effort
+const MAX_PER_DAY = 18;
+
+function lineToTotalDurationGradient(line) {
+    const totalDuration = timeRangesToTotalDuration(line);
+    const bg = "rgba(255, 255, 255, 0)";
+    const fg = "var(--sleep-color)";
+    const heightPercent = 100 * (MAX_PER_DAY * 60 - totalDuration) / (MAX_PER_DAY * 60);
+
+    const ret = [
+        "180deg",
+        `${bg} 0%`,
+        `${bg} ${heightPercent}%`,
+        `${fg} ${heightPercent}%`,
+        `${fg} 100%`,
+    ];
+
+    return ret.join(", ");
+}
+
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function App() {
     const [src, setSrc] = useState("");
 
-    const labels = [...Array(8).keys()].map((n) => String(n * 3).padStart(2, "0") + ":00");
+    const timeTableLabels = [...Array(8).keys()].map((n) => String(n * 3).padStart(2, "0") + ":00");
+    const totalsLabels = [...Array(MAX_PER_DAY / 3).keys()].map((n) => String((n + 1) * 3)).reverse();
 
     const dataLines = src.split("\n")
         .filter((line) => line.trim().length > 0)
         .map(splitLine);
+
     const columns = dataLines.map((line) => ({
+        gradient: timeRangesToGradient(line),
         totalDuration: timeRangesToTotalDuration(line),
-        gradient: timeRangesToGradient(line)
+        totalDurationGradient: lineToTotalDurationGradient(line),
     }));
 
     const averageTotalDurationPerLine = Math.floor(columns.reduce((acc, elem) => acc + elem.totalDuration, 0) / columns.length);
@@ -143,36 +167,47 @@ function App() {
                 placeholder="08:00-13:00, 14:00-15:00..."
             />
 
-            <section
-                    id="result"
-                    style={{
-                        "--cols": columns.length,
-                        "--col-width": "15px",
-                        "--sleep-color": "#89e"
-                    }}
-            >
-            
-                <ul className="labels">
-                    {labels.map((label) => (<li key={label}>{label}</li>))}
-                </ul>
+            <div>
+                <section id="timetable" style={{ "--cols": columns.length, "--col-width": "15px", "--sleep-color": "#89e" }}>
+                    <ul className="labels">
+                        {timeTableLabels.map((label) => (<li key={label}>{label}</li>))}
+                    </ul>
 
-                <div
-                    className="heat-map"
-                    style={{ background: `linear-gradient(${heatMapGradient})` }}
-                    title={`Average: ${durationToDurationString(averageTotalDurationPerLine)}`}
-                ></div>
+                    <div
+                        className="heat-map"
+                        style={{ background: `linear-gradient(${heatMapGradient})` }}
+                        title={`Average: ${durationToDurationString(averageTotalDurationPerLine)}`}
+                    ></div>
 
-                <ul className="data">
-                    {columns.map((col, idx) => (
-                        <li
-                            key={idx}
-                            className="column"
-                            style={{ background: `linear-gradient(${col.gradient})` }}
-                            title={durationToDurationString(col.totalDuration)}
-                        ></li>
-                    ))}
-                </ul>
-            </section>
+                    <ul className="data">
+                        {columns.map((col, idx) => (
+                            <li
+                                key={idx}
+                                className="column"
+                                style={{ background: `linear-gradient(${col.gradient})` }}
+                                title={durationToDurationString(col.totalDuration)}
+                            ></li>
+                        ))}
+                    </ul>
+                </section>
+
+                <section id="totals" style={{ "--cols": columns.length, "--col-width": "15px", "--sleep-color": "#89e" }}>
+                    <ul className="labels">
+                        {totalsLabels.map((label) => (<li key={label}>{label}</li>))}
+                    </ul>
+
+                    <ul className="data">
+                        {columns.map((col, idx) => (
+                            <li
+                                key={idx}
+                                className="column"
+                                style={{ background: `linear-gradient(${col.totalDurationGradient})` }}
+                                title={durationToDurationString(col.totalDuration)}
+                            ></li>
+                        ))}
+                    </ul>
+                </section>
+            </div>
         </main>
     );
 }
